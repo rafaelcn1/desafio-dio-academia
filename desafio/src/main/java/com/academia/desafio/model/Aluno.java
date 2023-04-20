@@ -4,23 +4,38 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
+//@Data //Não precisa criar os GETs e Sets
+@AllArgsConstructor // Como se fosse para criar um construtor com todos os valores
+@NoArgsConstructor // Como se fosse para criar um construtor vazio
 public class Aluno {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String nome, cpf, bairro;
+	private String nome;
+	@Column(unique = true)
+	private String cpf;
+	private String bairro;
 
 	private LocalDate dataNascimento;
 
-	private List<AvaliacaoFisica> avaliacaoFisicas = new ArrayList<>();
+	@OneToMany(mappedBy = "aluno", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<AvaliacaoFisica> avaliacoesFisica = new ArrayList<>();
 
 	public Long getId() {
 		return id;
@@ -62,13 +77,14 @@ public class Aluno {
 		this.dataNascimento = dataNascimento;
 	}
 
-	public List<AvaliacaoFisica> getAvaliacaoFisicas() {
-		return avaliacaoFisicas;
+	public List<AvaliacaoFisica> getAvaliacoesFisica() {
+		return avaliacoesFisica;
 	}
 
-	public void setAvaliacaoFisicas(List<AvaliacaoFisica> avaliacaoFisicas) {
-		this.avaliacaoFisicas = avaliacaoFisicas;
+	public void setAvaliacoesFisica(List<AvaliacaoFisica> avaliacoesFisica) {
+		this.avaliacoesFisica = avaliacoesFisica;
 	}
 	
 	
+
 }
